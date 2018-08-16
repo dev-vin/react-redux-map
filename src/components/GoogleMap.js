@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { render } from 'react-dom';
+// import { render } from 'react-dom';
 
 export class GoogleMap extends React.Component {
 
@@ -17,12 +17,10 @@ export class GoogleMap extends React.Component {
             // console.log(window.google)
             var card = document.getElementById('pac-card');
             var input = document.getElementById('search');
-            map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card)
-            // console.log(window.google.maps.places)
-            var autocompleteservice = new window.google.maps.places.Autocomplete(input);
-            // console.log(autocompleteservice)
-            autocompleteservice.bindTo('bounds', map);
 
+            map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
+            var autocompleteservice = new window.google.maps.places.Autocomplete(input);
+            autocompleteservice.bindTo('bounds', map);
             autocompleteservice.setFields(['address_components', 'geometry', 'icon', 'name']);
 
             var marker = new window.google.maps.Marker({
@@ -77,7 +75,7 @@ export class GoogleMap extends React.Component {
 
     render(){
         return(
-            <div id={this.props.id} style={{ width: "100%", height: 500 }}>
+            <div id={this.props.id} style={{ width: "100%", minHeight: 500, overflow: "auto" }}>
                 Loading map...
             </div>
         )
@@ -85,12 +83,11 @@ export class GoogleMap extends React.Component {
 }
 
 GoogleMap.propTypes = {
-    // google: PropTypes.object,
+    google: PropTypes.object,
     zoom: PropTypes.number,
     initialCenter: PropTypes.object,
     options: PropTypes.object,
     onMapLoad: PropTypes.func,
-    // autoCompleteInput: PropTypes.object,
 };
 
 export default GoogleMap;
