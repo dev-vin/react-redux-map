@@ -10,6 +10,6 @@ export default (state = { isPinging: false }, action) => {
   
       default:
         return state;
-    }``
+    }
   };
   

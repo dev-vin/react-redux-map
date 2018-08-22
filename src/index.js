@@ -4,8 +4,10 @@ import { Provider } from 'react-redux';
 import './index.css';
 import 'rxjs';
 import App from './App';
-import store from './store';
+import configureStore from './store';
 import registerServiceWorker from './registerServiceWorker';
+
+const store = configureStore();
 
 const Index = () => {
     return (

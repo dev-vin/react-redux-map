@@ -1,3 +1,4 @@
 
 export const FETCH_PLACES = 'FETCH_PLACES';
+export const SHOW_FOUND_PLACE = 'SHOW_FOUND_PLACE';
 export const SHOW_PLACES = 'SHOW_PLACES';

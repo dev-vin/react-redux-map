@@ -1,8 +1,11 @@
-import { FETCH_PLACES, SHOW_PLACES } from '../constants/autoComplete';
+import { FETCH_PLACES } from '../constants/autoComplete';
+import { showFoundPlace } from '../actions/actionTypes';
+import { ofType } from 'redux-observable';
+import { map } from 'rxjs/operators';
 
-const placesEpic = action$ =>
-  action$.ofType(FETCH_PLACES)
-    .delay(1000) // Asynchronously wait 1000ms then continue
-    .mapTo({ type: SHOW_PLACES });
+const placesEpic = action$ => action$.pipe(
+  ofType(FETCH_PLACES),
+  map(() => showFoundPlace())
+);
 
 export default placesEpic;
