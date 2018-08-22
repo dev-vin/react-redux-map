@@ -35,10 +35,10 @@ class MapContainer extends React.Component {
                         zoom: 14 
                     }}
                     onMapLoad={map=>{
-                        let marker = new window.google.maps.Marker({
-                            position: { lat: 41.0082, lng: 28.9784 },
-                            map: map,
-                        });
+                        // let marker = new window.google.maps.Marker({
+                        //     position: { lat: 41.0082, lng: 28.9784 },
+                        //     map: map,
+                        // });
                         // marker.addListener('click', e => {
                         //     this.createInfoWindow(e, map)
                         // })

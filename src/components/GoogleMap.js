@@ -1,103 +1,67 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { combineEpics, createEpicMiddleware, ofType } from 'redux-observable';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { map } from 'rxjs/operators';
 import { connect } from 'react-redux';
-import { fetchPlaces } from '../actions/actionTypes';
-// import { reducer as reduxFormReducer } from 'redux-form';
+import { fetchPlaces, showFoundPlace } from '../actions/actionTypes';
 
-// const ACTIONS = {
-//     FETCH_PLACES: 'FETCH_PLACES',
-//     SHOW_FOUND_PLACE: 'SHOW_FOUND_PLACE',
-// };
-
-// const fetchPlaces = place => ({ type: ACTIONS.FETCH_PLACES, payload: place });
-// const showFoundPlace = () => ({ type: ACTIONS.SHOW_FOUND_PLACE });
-
-// const placesEpic = action$ => action$.pipe(
-//     ofType(ACTIONS.FETCH_PLACES),
-//     map(() => showFoundPlace())
-// );
-
-// const rootEpic = combineEpics(placesEpic);
-
-// const places = (state = { isHappy: true }, action) => {
-//     switch(action.type) {
-//         case ACTIONS.SHOW_FOUND_PLACE:
-//             return state;
-//         default: 
-//             return state;
-//     }
-// };
-
-// const epicMiddleware = createEpicMiddleware();
-// const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-// const store = createStore(
-//     combineReducers({
-//         places,
-//     }), 
-//     applyMiddleware(epicMiddleware)
-// );
-
-// epicMiddleware.run(rootEpic)
-
-// const { foundPlace } = store.getState();
 export class GoogleMap extends React.Component {
 
-    // constructor(props) {
-    //     super(props);
-    //     this.onScriptLoad = this.onScriptLoad.bind(this);
-    // }
+    state = {
+        googleMap: {},
+        marker: {}
+    }
+
+    renderPlaceFound=()=>{
+        let map = this.state.googleMap;
+        let marker = this.state.marker;
+        let place = this.props.placeFound.placeFound;
+
+        if(!place.geometry){
+            alert(`No details available for ${place.name}`);
+            return
+        }
+
+        if(place.geometry.viewport){
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(15);
+        }
+
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+    }
 
     onScriptLoad=()=>{
         const map = new window.google.maps.Map(
             document.getElementById(this.props.id),
                 this.props.options);
         if(this.props.hasAutoComplete) {
-            // console.log(window.google)
-            var card = document.getElementById('pac-card');
-            var input = document.getElementById('search');
-
-            // positioning of search bar
-            map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-            // Autocomplete API 
-            var autocompleteservice = new window.google.maps.places.Autocomplete(input);
-            autocompleteservice.bindTo('bounds', map);
-            autocompleteservice.setFields(['address_components', 'geometry', 'icon', 'name']);
-
-            var marker = new window.google.maps.Marker({
+            let marker = new window.google.maps.Marker({
                 map: map,
                 anchorPoint: new window.google.maps.Point(0, -29)
             });
-      
-            
-    
-            autocompleteservice.addListener('place_changed', function(){
-                console.log('changed')
-                let place = autocompleteservice.getPlace();
-                this.props.showFound()
-                // store.dispatch(fetchPlaces(place))
-                // console.log( `${foundPlace}`)
-                if(!place.geometry){
-                    alert(`No details available for ${place.name}`);
-                    return
-                }
-
-                if(place.geometry.viewport){
-                    map.fitBounds(place.geometry.viewport);
-                } else {
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(15);  // Why 17? Because it looks good.
-                }
-
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-
-            });
+            this.setState({ googleMap: map, marker: marker}, ()=>this.renderAutoComplete());
         }
         this.props.onMapLoad(map)
+    }
+
+    renderAutoComplete=()=>{
+        var card = document.getElementById('pac-card');
+        var input = document.getElementById('search');
+        let map = this.state.googleMap;
+        // positioning of search bar
+        map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+        // Autocomplete API 
+        var autocompleteservice = new window.google.maps.places.Autocomplete(input);
+        autocompleteservice.bindTo('bounds', map);
+        autocompleteservice.setFields(['address_components', 'geometry', 'icon', 'name']);
+
+        autocompleteservice.addListener('place_changed', function(){
+            let place = autocompleteservice.getPlace();
+            this.props.showFound(place);
+            this.renderPlaceFound();
+        }.bind(this));
     }
 
     componentDidMount(){
@@ -112,7 +76,6 @@ export class GoogleMap extends React.Component {
             
             let x = document.getElementsByTagName('script')[0];
             x.parentNode.insertBefore(s, x);
-
             s.addEventListener('load', e => {
                 this.onScriptLoad();
             })
@@ -124,7 +87,7 @@ export class GoogleMap extends React.Component {
 
     render(){
         return(
-            <div id={this.props.id} style={{ width: "100%", minHeight: 500, overflow: "auto" }}>
+            <div id={this.props.id} style={{ width: "100%", minHeight: 600, overflow: "auto" }}>
                 Loading map...
             </div>
         )
@@ -133,27 +96,22 @@ export class GoogleMap extends React.Component {
 
 
 GoogleMap.propTypes = {
-    google: PropTypes.object,
-    zoom: PropTypes.number,
-    initialCenter: PropTypes.object,
-    options: PropTypes.object,
+    // zoom: PropTypes.number,
+    // initialCenter: PropTypes.object,
+    // options: PropTypes.object,
     onMapLoad: PropTypes.func,
-    // showFound: PropTypes.func, 
+    showFound: PropTypes.func, 
+    placeFound: PropTypes.object, 
 };
 
 const mapStateToProps = function (state) {
-    return {state};
+    return { placeFound: state.placesReducer };
 }
 
 function mapDispatchToProps (dispatch) {
-    console.log('dispatch', dispatch)
     return {
-      showFound() {
-        dispatch(fetchPlaces());
-      }
-    }
+      showFound: payload => dispatch(showFoundPlace(payload))
+    };
 };
-
-// export default GoogleMap;
 
 export default connect(mapStateToProps, mapDispatchToProps)(GoogleMap);
