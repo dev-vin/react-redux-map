@@ -87,7 +87,7 @@ export class GoogleMap extends React.Component {
 
     render(){
         return(
-            <div id={this.props.id} style={{ width: "100%", minHeight: 750, overflow: "auto" }}>
+            <div id={this.props.id} style={{ width: "100%", minHeight: 700, overflow: "auto" }}>
                 Loading map...
             </div>
         )
