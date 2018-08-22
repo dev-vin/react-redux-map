@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchPlaces, showFoundPlace } from '../actions/actionTypes';
+import { showFoundPlace } from '../actions/actionTypes';
 
 export class GoogleMap extends React.Component {
 
@@ -87,7 +87,7 @@ export class GoogleMap extends React.Component {
 
     render(){
         return(
-            <div id={this.props.id} style={{ width: "100%", minHeight: 600, overflow: "auto" }}>
+            <div id={this.props.id} style={{ width: "100%", minHeight: 750, overflow: "auto" }}>
                 Loading map...
             </div>
         )

@@ -1,15 +1,15 @@
 import React from 'react';
-import ReactDOM, {render} from 'react-dom';
+// import ReactDOM, {render} from 'react-dom';
 import GoogleMap from '../components/GoogleMap.js';
 // import InfoWindow from '../components/InfoWindow.js';
-import AutoComplete from '../components/AutoComplete.js';
+// import AutoComplete from '../components/AutoComplete.js';
 import { TextField, Card } from '@material-ui/core';
 
 class MapContainer extends React.Component {
-    constructor() {
-        super();
-        // this.createInfoWindow = this.createInfoWindow.bind(this)
-      }
+    // constructor() {
+    //     super();
+    //     // this.createInfoWindow = this.createInfoWindow.bind(this)
+    //   }
     // will need to create a separate component
     // createInfoWindow(e, map){
     //     const iw = new window.google.maps.InfoWindow({
@@ -25,8 +25,8 @@ class MapContainer extends React.Component {
     render(){
         return (
             <div>
-                <Card id="pac-card">
-                    <TextField id="search" label="Search places" type="search" />
+                <Card id="pac-card" style={{ margin: "30px" }}>
+                    <TextField id="search" label="Search places" type="search" style={{ width: "350px", margin: "5px 10px" }}/>
                 </Card>
                 <GoogleMap 
                     id="myMap"

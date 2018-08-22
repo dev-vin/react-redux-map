@@ -1,4 +1,4 @@
-import { FETCH_PLACES, SHOW_FOUND_PLACE } from '../constants';
+import { FETCH_PLACES } from '../constants';
 import { showFoundPlace } from '../actions/actionTypes';
 import { ofType } from 'redux-observable';
 import { map } from 'rxjs/operators';

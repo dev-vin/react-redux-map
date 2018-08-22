@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { TextField, Card, withStyles } from '@material-ui/core';
-import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
 
 const styles = {
